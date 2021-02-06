@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript">
+        const f1 = (e) => {
+            const id = e.target.id;
+            const el = document.getElementById(id);
+
+            const color = el.style.color;
+            el.style.color = color === "white" ? "black" : "white";
+
+            const bg = el.style['background-color'];
+            el.style['background-color'] = bg === "yellow" ? "blue" : "yellow";
+        }
+
+        const f2 = (e) => {
+            const el = document.all.item(9);
+
+            const style = el.style;
+            style.color = style.color === "red" ? "white" : "red";
+
+            const bg = style['background-color'];
+            style['background-color'] = bg === "green" ? "white" : "green";
+        }
+
+        window.addEventListener('load', () => {
+            document.getElementsByTagName('figcaption')[0].onclick = (e) => {
+                const caption = e.target;
+                caption.style.color = caption.style.color === "coral" ? "navy" : "coral";
+
+                const image = document.getElementsByTagName('img')[0];
+                image.style.width = image.style.width === "300px" ? "500px" : "300px";
+            }
+        });
+    </script>
+</head>
+<body>
+    <h2 id="1" onclick="f1(event)" style="background-color: yellow">
+        ДОСТУП до властивостей і методів
+    </h2>
+    <p id="2" onclick="f2(event)" style="color: red">
+        Кулініч Богдан (Колекція all)
+    </p>
+    <div id="3" onclick="f1(event)" style="background-color: yellow">
+        Варіант 5, група ІТ-74 (Метод getElementById())
+    </div>
+
+    <figure>
+        <img style="width:300px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Mueller_Hut_with_Mt_Sefton_and_Aoraki_%28Mt_Cook%29_during_the_sunrise.jpg/640px-Mueller_Hut_with_Mt_Sefton_and_Aoraki_%28Mt_Cook%29_during_the_sunrise.jpg" alt="Хатина Мюллера біля підніжжя гір Сефтон та Аоракі / Кука під час сходу сонця">
+        <figcaption style="color: navy">підніжжя гір Сефтон та Аоракі</figcaption>
+    </figure>
+</body>
+</html>
