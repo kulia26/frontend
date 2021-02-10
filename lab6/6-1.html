@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript">
+        const fieldsErrors = {};
+
+        const validatePIB = (t) => {
+            if(!/[А-Яа-яіїє ]+/.test(t)) {
+                return 'ПІБ повинно містити лише букви або знак пробілу'
+            }
+
+            if(!/[A-Za-zА-Яіїєа-я]+ [A-Za-zіїєА-Яа-я]+ [A-Za-zіїєА-Яа-я]+/.test(t)) {
+                return 'ПІБ повинно бути у форматі Прізвище Ім\'я По-батькові'
+            }
+        }
+
+        const validateGroup = (t) => {
+            if(!/[А-ЯA-Za-zа-яіїє]{2}-[0-9]{2}/.test(t)) {
+                return 'Група повинна бути у форматі ХХ-00'
+            }
+        }
+
+        const validateVariant = (t) => {
+            if(/([1-9]{3,}|-)/.test(t) || t === '0') {
+                return 'Варіант повинен бути в діапазоні 1-99';
+            }
+        }
+
+        const validatePhone = (t) => {
+            if(!/^\+/.test(t)) {
+                return 'Телефон повинен починатися з "+"';
+            }
+
+            if(/[-, A-Za-zіїєА-Яа-я]+/.test(t)) {
+                return 'Телефон повинен містити тільки цифри і "+"';
+            }
+        }
+
+        const validateEmail = (t) => {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if(!re.test(t.toLowerCase())) {
+                return 'Неправильний email';
+            }
+        }
+
+        const fields = {
+            'pib': validatePIB,
+            'group': validateGroup,
+            'variant': validateVariant,
+            'phone': validatePhone,
+            'email': validateEmail,
+        }
+
+        renderFieldsErrors = () => {
+            const root = document.getElementById('errors');
+            let newHTML = '';
+
+            Object.keys(fields).forEach((field) => {
+                if(fieldsErrors[field]) {
+                    newHTML += `<p>Помилка у полі ${field}:</p>`;
+                    newHTML += `<ul><li>`
+                    newHTML += fieldsErrors[field];
+                    newHTML += `</ul></li>`
+                }
+            });
+
+            root.innerHTML = newHTML;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            Object.keys(fields).forEach((field) => {
+                const element = document.getElementById(field);
+                element.addEventListener('input', event => {
+                    const validate = fields[field];
+                    fieldsErrors[field] = validate(event.target.value);
+                    renderFieldsErrors();
+                })
+            });
+
+            const btn = document.getElementById('btn');
+
+            btn.addEventListener('mouseover', () => {
+                const formData = document.forms.user;
+                const win = window.open();
+
+                win.document.body.innerHTML = '<ul>';
+                Object.keys(fields).forEach(field => {
+                    win.document.body.innerHTML +=`<li style="font-size: 25px">${field}: ${formData.elements[field].value}</li>`;
+                })
+                win.document.body.innerHTML += '<ul>';
+            })
+        });
+    </script>
+
+    <style>
+        fieldset {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form {
+            width: 500px;
+        }
+
+        input {
+            margin-bottom: 10px;
+        }
+
+        label {
+            border-top: 1px solid silver;
+            padding-top: 5px;
+        }
+
+        #errors li {
+            font-style: italic;
+        }
+
+        #errors p {
+            color: red;
+        }
+
+        p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <form name="user">
+        <fieldset>
+            <legend>Завдання 2.1.</legend>
+            <label for="pib">ПІБ</label>
+            <input type="text" name="pib" id="pib" required>
+
+            <label for="group">Група</label>
+            <input type="text" name="group" id="group" required>
+
+            <label for="variant">Варіант</label>
+            <input type="number" name="variant" id="variant" required>
+
+            <label for="phone">Телефон</label>
+            <input type="tel" name="phone" id="phone" required>
+
+            <label for="email">e-mail</label>
+            <input type="email" name="email" id="email" required>
+
+            <input id="btn" type="submit" value="Відкрити вікно" required>
+
+            <div id="errors"></div>
+        </fieldset>
+    </form>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript">
+        const variantNumber = 5;
+
+        const setSelected = (event) => {
+            const prevSelected = document.getElementsByClassName('selected');
+
+            if(prevSelected.length !== 0) {
+                prevSelected[0].classList.remove('selected');
+            }
+
+            const cell = event.target;
+
+            cell.classList.add('selected');
+        }
+
+        const renderTable = () => {
+            const size = 6;
+            let tableHTML = '';
+            let index = 1;
+            tableHTML += '<table>';
+            for (let row = 1; row < size + 1; row++) {
+                tableHTML += '<tr>';
+                for (let col = 1; col < size + 1; col++) {
+                    const className = index === variantNumber ? 'variant' : '';
+                    tableHTML += `<td id="cell-${index}" onclick="setSelected(event)" class="${className}">`;
+                    tableHTML += `${index}`;
+                    tableHTML += '</td>';
+
+                    index++;
+                }
+                tableHTML += '</tr>';
+            }
+            tableHTML += '</table>';
+            return tableHTML
+        }
+
+        paintCellsByRandomColors = () => {
+            const cells = document.getElementsByTagName('td');
+            const selectedCell = document.getElementsByClassName('selected')[0];
+
+            for (let i = 0; i < cells.length; i++) {
+                const cell = cells[i];
+
+                if(!selectedCell || (selectedCell && selectedCell.id !== cell.id)) {
+                    const r = Math.round(Math.random()*255);
+                    const g = Math.round(Math.random()*255);
+                    const b = Math.round(Math.random()*255);
+                    cell.style.background = `rgb(${r}, ${g}, ${b})`
+                }
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const root = document.getElementById('root');
+
+            root.innerHTML = renderTable();
+
+            const cell = document.getElementById(`cell-${variantNumber}`);
+
+            cell.addEventListener('mouseover', () => {
+                paintCellsByRandomColors();
+            })
+
+            cell.addEventListener('click', () => {
+                const palette = document.getElementById('palette');
+                cell.style.background = palette.value;
+            })
+        });
+
+    </script>
+
+    <style>
+        table {
+            border: 1px solid black;
+        }
+
+        td {
+            width: 55px;
+            height: 55px;
+            border: 1px solid black;
+            text-align: center;
+            padding: 4px;
+            box-sizing: border-box;
+            transition: background-color 0.2s;
+        }
+
+        .selected {
+            border: 3px dotted #515151;
+            box-shadow: 2px 2px 5px black;
+            transform: scale(1.2);
+            transition: transform 0.2s;
+        }
+
+        .variant {
+            font-style: italic;
+            border-radius: 50%;
+            transform: scale(1.25);
+        }
+    </style>
+</head>
+<body>
+<p>Для того щоб обрати комірку натисніть на неї</p>
+<p>Для зміни кольору клітинок наведіть на круглу клітинку</p>
+    <div id="root">
+    </div>
+
+    <label>
+        <p>Оберіть колік круглої комірки а потім натисніть на неї</p>
+        <input id="palette" type="color" value="#ff0000">
+    </label>
+</body>
+</html>
