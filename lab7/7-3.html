@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="application/javascript">
+        function draw() {
+            const y = (x) => x*x*x - 1.5;
+
+            const size = 800;
+            const start = size/2;
+            const mulX = 1;
+            const mulY = 0.001;
+            const marginY = y(0)*start/13;
+
+            const canvas = document.getElementById('canvas');
+
+            if (canvas.getContext) {
+                const ctx = canvas.getContext('2d');
+
+                //draw y coordinate
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'gray';
+                ctx.beginPath();
+                ctx.moveTo(start, 0);
+                ctx.lineTo(start, size);
+
+                ctx.stroke();
+                ctx.closePath()
+
+
+                //draw x coordinate
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'gray';
+                ctx.beginPath();
+                ctx.moveTo(0, start);
+                ctx.lineTo(size, start);
+
+                ctx.stroke();
+                ctx.closePath()
+
+
+                // draw f(x)
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = 'red';
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+
+                for (let x = -size; x < size; x++) {
+                    ctx.lineTo((start - x*mulX), (start + y(x)*mulY - marginY));
+                }
+
+                ctx.stroke();
+                ctx.closePath()
+            }
+        }
+    </script>
+</head>
+<body onload="draw()">
+    <canvas id="canvas" width="800" height="800" style="background: beige"></canvas>
+</body>
+</html>
