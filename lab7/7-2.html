@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="application/javascript">
+        const functions = {
+            sin: 'sin',
+            cos: 'cos',
+            tan: 'tg',
+        };
+
+        let validationError = '';
+
+        validateAngel = (angle) => {
+            if (/[a-zA-ZА-Яа-я e\+]/.test(angle)) {
+                return 'Кут містить невалідні символи';
+            }
+
+            const number = parseInt(angle);
+
+            if (number >= 90 || number <= 0) {
+                return 'Кут повинен бути більше 0 та менше 90';
+            }
+        }
+
+        renderValidationError = () => {
+            const error = document.getElementById('result');
+
+            if (validationError) {
+                error.innerText = validationError;
+                error.classList.add('error');
+            } else {
+                error.innerText = '';
+                error.classList.remove('error');
+            }
+        }
+
+        calculateResult = () => {
+            let resultText = '';
+            const functionValue = document.getElementById('function').value;
+            resultText += functions[functionValue];
+
+            const angle = document.getElementById('angle').value;
+
+            resultText += `(${angle}°) = `;
+
+            const round = (n) => {
+                const num = n + 0.0000001;
+                const s = JSON.stringify(num);
+                return s.substr(0, 4);
+            };
+            const result = round(Math[functionValue]((angle*Math.PI)/180));
+
+            resultText += `${result}`;
+
+            if(!validationError) {
+                document.getElementById('result').innerText = resultText;
+            }
+        }
+
+        const f = () => {
+            const input = document.getElementById('angle');
+
+
+            const btn = document.getElementById('btn');
+
+            btn.addEventListener('click', () => {
+                validationError = validateAngel(input.value);
+                renderValidationError();
+
+                calculateResult();
+            });
+
+            input.addEventListener('input', (event) => {
+                validationError = validateAngel(event.target.value);
+                renderValidationError();
+
+            });
+        }
+    </script>
+    <style>
+        .error {
+            color: darkred;
+        }
+    </style>
+</head>
+<body onload="f()">
+<h2>Тригонометричні функції</h2>
+<p>Кут повинен бути більше 0 та менше 90</p>
+<p>
+    <label for="angle">
+        Кут в град.
+        <input type="number" id="angle" name="angle">
+    </label>
+</p>
+<p>
+    <label for="function">
+        Функція
+        <select name="function" id="function">
+            <option value="sin" selected>синус</option>
+            <option value="cos">косинус</option>
+            <option value="tan">тангенс</option>
+        </select>
+    </label>
+</p>
+<p>
+    <input type="button" id="btn" name="btn" value="Обчислити">
+</p>
+
+<span id="result"></span>
+</body>
+</html>
